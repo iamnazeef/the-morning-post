@@ -1,10 +1,8 @@
-const Trending = () => {
+const TrendingUp = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="icon icon-tabler icon-tabler-trending-up"
-      width="24"
-      height="24"
+      className="icon icon-tabler icon-tabler-trending-up h-[22px] w-[22px]"
       viewBox="0 0 24 24"
       strokeWidth="2"
       stroke="currentColor"
@@ -19,4 +17,4 @@ const Trending = () => {
   );
 };
 
-export default Trending;
+export default TrendingUp;

@@ -27,15 +27,14 @@ const Navbar = () => {
     <header className="header bg-white mb-2 sticky top-0 z-10">
       <nav className="navbar flex h-16 border-b border-black">
         <div className="container mx-auto px-2 flex justify-between items-center font-noto-sans-georgian">
-          <div className="date text-sm hidden laptop:block">
-            <div className="font-domine font-[700]">{date}</div>
-            <div className="font-noto-sans-georgian">Today's News</div>
+          <div className="date text-sm hidden laptop:block font-domine font-[700]">
+            {date}
           </div>
-          <div className="font-tinos font-[700] text-2xl laptop:text-4xl">
+          <h1 className="font-tinos font-[700] text-2xl laptop:text-4xl">
             <Link to="/">
               The <span className="whitespace-nowrap">Morning Post</span>
             </Link>
-          </div>
+          </h1>
           <div className="flex items-center gap-4">
             <Link
               to="#"
