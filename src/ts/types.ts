@@ -5,3 +5,8 @@ export type Dates = {
   year: string;
   getDate(): string;
 };
+
+export type CategoriesData = {
+  category: string;
+  link: string;
+};
