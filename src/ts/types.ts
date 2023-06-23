@@ -7,6 +7,6 @@ export type Dates = {
 };
 
 export type CategoriesData = {
-  category: string;
+  name: string;
   link: string;
 };
