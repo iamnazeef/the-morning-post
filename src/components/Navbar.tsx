@@ -1,6 +1,6 @@
 import Menu from "../assets/icons/Menu";
 import Video from "../assets/icons/Video";
-import dates from "../utils/date";
+import dates from "../utils/dates";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
