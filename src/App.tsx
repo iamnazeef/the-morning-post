@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div className="selection:bg-black selection:text-white">
       <Navbar />
-      <div className="container mx-auto px-2">
+      <div className="w-full max-w-[1200px] mx-auto">
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
