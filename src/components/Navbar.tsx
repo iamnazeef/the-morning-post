@@ -24,7 +24,7 @@ const Navbar = () => {
   ));
 
   return (
-    <header className="header bg-white">
+    <header className="header bg-white mb-2 sticky top-0 z-10">
       <nav className="navbar flex h-16 border-b border-black">
         <div className="container mx-auto px-2 flex justify-between items-center font-noto-sans-georgian">
           <div className="date text-sm hidden laptop:block">
@@ -39,7 +39,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             <Link
               to="#"
-              className="font-noto-sans-georgian text-xl laptop:text-2xl flex gap-1 items-center rounded-full py-1 px-3 laptop:px-3.5 border-2 border-black hover:border-gray-400"
+              className="font-noto-sans-georgian text-xl laptop:text-2xl flex gap-1 items-center rounded-full py-1 px-3 laptop:px-3.5 hover:bg-gray-100"
             >
               <Video />
               <span>Live</span>
