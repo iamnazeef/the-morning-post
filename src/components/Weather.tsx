@@ -26,10 +26,14 @@ const Weather = () => {
     };
   }, [data, error, isLoading]);
 
+  if (!weatherData?.weather) {
+    return;
+  }
+
   return (
-    <section className="weather bg-white max-w-[400px] laptop:mx-auto flex items-center justify-around font-noto-sans-georgian border border-gray-600 rounded-md p-2 shadow-sm">
+    <section className="weather bg-white w-full tablet:max-w-[400px] laptop:mx-auto flex items-center justify-around font-noto-sans-georgian border border-gray-600 rounded-md p-2 shadow-sm">
       <div className="icon flex flex-col items-center">
-        {weatherData?.weather && (
+        {weatherData?.main && (
           <img
             src={`https://openweathermap.org/img/wn/${weatherData?.weather[0]?.icon}@2x.png`}
             alt={weatherData?.weather[0].main}
