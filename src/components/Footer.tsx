@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="h-36 border-t border-black p-2">
-      <div className="w-full max-w-[1200px] mx-auto">
+      <div className="container mx-auto px-2">
         <span className="font-domine underline hover:no-underline cursor-pointer">
           Back to top
         </span>

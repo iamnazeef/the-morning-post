@@ -2,43 +2,29 @@ import { useState, useEffect } from "react";
 import useFetch from "../hooks/useFetch";
 import { api } from "../utils/api";
 import { WeatherData } from "../ts/types";
+import useGeolocation from "../hooks/useGeolocation";
 
 const Weather = () => {
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [weatherData, setWeatherData] = useState<WeatherData | any>({});
-  const [weatherError, setWeatherError] = useState("");
-  const [weatherDataLoading, setWeatherDataLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [weatherError, setWeatherError] = useState<string | null>(null);
+  const [weatherDataLoading, setWeatherDataLoading] = useState<boolean>(true);
 
+  const { longitude, latitude } = useGeolocation();
   const { data, error, isLoading } = useFetch(api.weather(longitude, latitude));
-
-  useEffect(() => {
-    setWeatherData(data);
-    setWeatherError(error);
-    setWeatherDataLoading(isLoading);
-  }, [data, error, isLoading]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          if (isMounted) {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
-          }
-        },
-        (error) => console.error(error.message)
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
+    if (isMounted) {
+      setWeatherData(data);
+      setWeatherError(error);
+      setWeatherDataLoading(isLoading);
     }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [data, error, isLoading]);
 
   return (
     <section className="weather bg-white max-w-[400px] laptop:mx-auto flex items-center justify-around font-noto-sans-georgian border border-gray-600 rounded-md p-2 shadow-sm">

@@ -26,7 +26,7 @@ const Navbar = () => {
   return (
     <header className="header bg-white mb-2 sticky top-0 z-10">
       <nav className="navbar flex h-16 border-b border-black">
-        <div className="w-full max-w-[1200px] mx-auto flex justify-between items-center font-noto-sans-georgian">
+        <div className="container mx-auto px-2 flex justify-between items-center font-noto-sans-georgian">
           <div className="date text-sm hidden laptop:block font-domine font-[700]">
             {date}
           </div>
@@ -50,7 +50,7 @@ const Navbar = () => {
         </div>
       </nav>
       <nav className="categories text-sm font-noto-sans-georgian border-b py-1 border-black">
-        <div className="w-full max-w-[1200px] mx-auto font-domine font-[700] laptop:hidden">
+        <div className="container mx-auto px-2 font-domine font-[700] laptop:hidden">
           {date}
         </div>
         <div className="hidden laptop:flex justify-center items-center gap-4 capitalize">

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
 
 const useFetch = (URL: string | null) => {
   const controller = new AbortController();
-  const [error, setError] = useState("");
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<any>({});
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -13,11 +15,13 @@ const useFetch = (URL: string | null) => {
       setError("");
       setIsLoading(true);
       if (URL) {
-        fetch(URL)
-          .then((response) => response.json())
-          .then((data) => {
+        axios
+          .get(URL, {
+            signal: controller.signal,
+          })
+          .then((response) => {
             if (isMounted) {
-              setData(data);
+              setData(response.data);
             }
           })
           .catch((err) => {
