@@ -1,16 +1,29 @@
-const News = () => {
+import { useState } from "react";
+
+const News = ({ data }: any) => {
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
   return (
-    <article className="news-card bg-white shadow-lite p-2 flex my-4 hover:underline cursor-pointer gap-4">
-      <section className="text">
-        <div className="title font-domine font-[700] text-2xl">Big Title</div>
-        <div className="description font-noto-sans-georgian text-sm laptop:text-base">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti
-          mollitia aliquid eligendi nihil
+    <article
+      className="news-card bg-white shadow-lite tablet:min-h-[200px] p-2 flex my-4 cursor-pointer gap-4"
+      onMouseOver={() => setIsMouseOver(true)}
+      onMouseLeave={() => setIsMouseOver(false)}
+    >
+      <section className="text w-[60%]">
+        <div
+          className={`title font-domine font-[700] text-base tablet:text-xl laptop:text-2xl mb-2 ${
+            isMouseOver ? "underline" : "no-underline"
+          }`}
+        >
+          {data?.title}
+        </div>
+        <div className="description hidden tablet:block font-noto-sans-georgian text-sm laptop:text-base">
+          {data?.description.substring(0, 100)}...
         </div>
       </section>
-      <section className="image">
+      <section className="image w-[40%]">
         <img
-          src="https://images.unsplash.com/photo-1622228629531-0d417d33b316?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+          src={data?.image}
           alt="image"
           className="w-full max-w-[350px]"
           width={200}
