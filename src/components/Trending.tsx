@@ -1,11 +1,12 @@
 import TrendingUp from "../assets/icons/TrendingUp";
-import News from "./News";
 import { useContext } from "react";
 import { NewsContext } from "../context/NewsContext";
 import { Link } from "react-router-dom";
+import PlaceHolderImage from "../assets/images/placeholder-image.webp";
 
 const Trending = () => {
-  const { news } = useContext(NewsContext);
+  const data = localStorage.getItem("newsData");
+  const news = data && JSON.parse(data);
 
   const articles = news?.slice(0, 5);
 
@@ -17,10 +18,15 @@ const Trending = () => {
       <section className="news px-2">
         <ul>
           {articles &&
-            articles.map((article: any) => (
+            articles.map((article: any, index: number) => (
               <li key={article?.url}>
                 <Link to={article?.url}>
-                  <article className="news-card bg-white shadow-lite tablet:min-h-[200px] laptop:min-h-fit p-2 flex my-4 cursor-pointer gap-4 hover:underline">
+                  <article
+                    className={`news-card bg-white ${
+                      index !== articles?.length - 1 &&
+                      "border-b border-gray-300"
+                    } tablet:min-h-[200px] laptop:min-h-fit p-2 flex my-4 cursor-pointer gap-4 hover:underline`}
+                  >
                     <section className="text w-[60%]">
                       <div className="title font-domine font-[700] text-base tablet:text-xl laptop:text-base mb-2">
                         {article?.title}
@@ -33,7 +39,7 @@ const Trending = () => {
                       <img
                         src={article?.image}
                         alt="image"
-                        className="w-full max-w-[350px]"
+                        className="w-full max-w-[350px] h-full object-contain"
                         width={200}
                         height={200}
                       />
