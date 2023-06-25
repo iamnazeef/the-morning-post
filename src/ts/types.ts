@@ -1,8 +1,8 @@
 export interface Dates {
   weekday: string;
   month: string;
-  day: string;
-  year: string;
+  day: number;
+  year: number;
   getDate(): string;
 }
 
@@ -71,4 +71,24 @@ export interface Wind {
   speed: number;
   deg: number;
   gust: number;
+}
+
+export interface Articles {
+  totalArticles: number;
+  articles: Article[];
+}
+
+export interface Article {
+  content: string;
+  description: string;
+  image: string;
+  publishedAt: string;
+  source: Source;
+  title: string;
+  url: string;
+}
+
+export interface Source {
+  name: string;
+  url: string;
 }
