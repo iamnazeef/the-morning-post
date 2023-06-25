@@ -4,7 +4,11 @@ import dates from "../utils/dates";
 import { Link } from "react-router-dom";
 import { CategoriesData } from "../ts/types";
 
-const Navbar = () => {
+interface Props {
+  handleMobileNav: (operation: string) => void;
+}
+
+const Navbar = ({ handleMobileNav }: Props) => {
   const date = dates.getDate();
 
   const categoriesData: CategoriesData[] = [
@@ -18,9 +22,11 @@ const Navbar = () => {
   ];
 
   const categoriesRendered = categoriesData.map((category) => (
-    <Link to={category.link} key={category.name} className="hover:underline">
-      {category.name}
-    </Link>
+    <li key={category.name}>
+      <Link to={category.link} className="hover:underline">
+        {category.name}
+      </Link>
+    </li>
   ));
 
   return (
@@ -43,7 +49,10 @@ const Navbar = () => {
               <Video />
               <span>Live</span>
             </Link>
-            <button className="laptop:hidden">
+            <button
+              onClick={() => handleMobileNav("open")}
+              className="laptop:hidden"
+            >
               <Menu />
             </button>
           </div>
@@ -53,9 +62,9 @@ const Navbar = () => {
         <div className="container mx-auto px-2 font-domine font-[700] laptop:hidden">
           {date}
         </div>
-        <div className="hidden laptop:flex justify-center items-center gap-4 capitalize">
+        <ul className="categories hidden laptop:flex justify-center items-center gap-4 capitalize">
           {categoriesRendered}
-        </div>
+        </ul>
       </nav>
     </header>
   );
