@@ -30,8 +30,8 @@ const months: string[] = [
 const dates: Dates = {
   weekday: weekdays[date.getDay()],
   month: months[date.getMonth()],
-  day: date.getDay().toString(),
-  year: date.getFullYear().toString(),
+  day: date.getDate(),
+  year: date.getFullYear(),
   getDate() {
     return `${this.weekday}, ${this.month} ${this.day}, ${this.year}`;
   },
