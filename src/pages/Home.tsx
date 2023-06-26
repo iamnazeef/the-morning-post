@@ -1,45 +1,67 @@
 import { useContext, useEffect, useState } from "react";
-import News from "../components/News";
-import Sidebar from "../components/Sidebar";
-import { NewsContext } from "../context/NewsContext";
-import { Link } from "react-router-dom";
+import { TrendingNewsContext } from "../context/TrendingNewsContext";
 import { Article } from "../ts/types";
+import { LanguageContext } from "../context/LanguageContext";
+import Page from "../components/Page";
+import useFetch from "../hooks/useFetch";
 
 const Home = () => {
-  const [data, setData] = useState<Article[] | null>(null);
-  const { news, setNews } = useContext(NewsContext);
+  const [news, setNews] = useState<Article[]>([]);
+  const [newsError, setNewsError] = useState<string>("");
+  const [isNewsLoading, setIsNewsLoading] = useState<boolean>(true);
+  const [page, setPage] = useState(1);
+  const trendingContextValue = useContext(TrendingNewsContext);
+  const { language } = useContext(LanguageContext) || { language: "en" };
+
+  if (trendingContextValue === null) {
+    return null;
+  }
+
+  const { setTrendingNews } = trendingContextValue;
+  const { data, error, isLoading } = useFetch([language]);
+
+  const handleInfiniteScroll = () => {
+    const isBottom =
+      window.innerHeight + document.documentElement.scrollTop + 300 >=
+      document.documentElement.scrollHeight;
+
+    if (isBottom) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   useEffect(() => {
-    let data = localStorage.getItem("newsData");
-    if (data) {
-      data = JSON.parse(data);
-      setData(data?.slice(5));
-    }
-    setNews(data);
-  }, []);
+    let isMounted = true;
+    window.addEventListener("scroll", handleInfiniteScroll);
 
-  console.log(data);
+    if (isMounted) {
+      if (Array.isArray(data)) {
+        if (data.length <= 5) {
+          setNews((prev) => [...prev, ...data]);
+        } else {
+          setNews((prev) => [...prev, ...data.slice(5)]);
+        }
+      }
+      if (Array.isArray(data)) {
+        setTrendingNews(data.slice(0, 5));
+      }
+      setNewsError(error);
+      setIsNewsLoading(isLoading);
+    }
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("scroll", handleInfiniteScroll);
+    };
+  }, [data, page]);
 
   return (
-    <main className="home min-h-screen">
-      <Sidebar />
-      <section className="news w-full laptop:w-[60%] laptop:pr-2">
-        <h2 className="font-domine mt-4 p-2 font-[700] text-xl laptop:text-2xl">
-          Today's News
-        </h2>
-        <ul>
-          {data &&
-            Array.isArray(data) &&
-            data.map((article: Article) => (
-              <li key={article!.url}>
-                <Link to={article!.url}>
-                  <News article={article} />
-                </Link>
-              </li>
-            ))}
-        </ul>
-      </section>
-    </main>
+    <Page
+      heading={"Today's News"}
+      news={news}
+      isLoading={isNewsLoading}
+      error={newsError}
+    />
   );
 };
 
