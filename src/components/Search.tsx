@@ -2,13 +2,13 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Search = () => {
-  const queryRef = useRef();
+  const queryRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const query = queryRef?.current?.value;
-
+    const query = queryRef!.current!.value;
+    queryRef!.current!.value = "";
     navigate(`/search?q=${query}`);
   };
 
@@ -20,6 +20,7 @@ const Search = () => {
           type="search"
           className="outline-none w-full p-2"
           placeholder="Search..."
+          required
         />
         <button className="border-2 border-black p-2 rounded-md bg-black text-white hover:bg-white hover:text-black">
           Search
