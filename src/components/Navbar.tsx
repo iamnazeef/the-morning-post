@@ -12,13 +12,13 @@ const Navbar = ({ handleMobileNav }: Props) => {
   const date = dates.getDate();
 
   const categoriesData: CategoriesData[] = [
-    { name: "business", link: "#" },
-    { name: "science", link: "#" },
-    { name: "health", link: "#" },
-    { name: "sports", link: "#" },
-    { name: "arts", link: "#" },
-    { name: "food", link: "#" },
-    { name: "travel", link: "#" },
+    { name: "business", link: "/search?q=business" },
+    { name: "science", link: "/search?q=science" },
+    { name: "health", link: "/search?q=health" },
+    { name: "sports", link: "/search?q=sports" },
+    { name: "arts", link: "/search?q=arts" },
+    { name: "food", link: "/search?q=food" },
+    { name: "travel", link: "/search?q=travel" },
   ];
 
   const categoriesRendered = categoriesData.map((category) => (
@@ -36,11 +36,11 @@ const Navbar = ({ handleMobileNav }: Props) => {
           <div className="date text-sm hidden laptop:block font-domine font-[700]">
             {date}
           </div>
-          <h1 className="font-tinos font-[700] text-2xl laptop:text-4xl">
-            <Link to="/">
+          <Link to="/">
+            <h1 className="font-tinos font-[700] text-2xl laptop:text-4xl">
               The <span className="whitespace-nowrap">Morning Post</span>
-            </Link>
-          </h1>
+            </h1>
+          </Link>
           <div className="flex items-center gap-4">
             <Link
               to="#"
@@ -51,7 +51,7 @@ const Navbar = ({ handleMobileNav }: Props) => {
             </Link>
             <button
               onClick={() => handleMobileNav("open")}
-              className="laptop:hidden"
+              className="laptop:hidden hover:bg-gray-100 p-1.5 rounded-full"
             >
               <Menu />
             </button>
