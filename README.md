@@ -3,6 +3,9 @@ A React.js based news app.
 
 ### Tech Stack
 
+#### Package Manager
+- NPM
+
 #### UI Library
 - React.js
 
