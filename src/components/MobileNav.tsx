@@ -13,6 +13,24 @@ const MobileNav = ({ isMobileNavOpen, handleMobileNav }: Props) => {
   const queryRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
 
+  const categoriesData: CategoriesData[] = [
+    { name: "business", link: "/search?q=business" },
+    { name: "science", link: "/search?q=science" },
+    { name: "health", link: "/search?q=health" },
+    { name: "sports", link: "/search?q=sports" },
+    { name: "arts", link: "/search?q=arts" },
+    { name: "food", link: "/search?q=food" },
+    { name: "travel", link: "/search?q=travel" },
+  ];
+
+  const categoriesRendered = categoriesData.map((category) => (
+    <li key={category.name}>
+      <Link to={category.link} className="hover:underline">
+        {category.name}
+      </Link>
+    </li>
+  ));
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const query = queryRef!.current!.value;
@@ -28,34 +46,23 @@ const MobileNav = ({ isMobileNavOpen, handleMobileNav }: Props) => {
     handleMobileNav("close");
   };
 
-  const categoriesData: CategoriesData[] = [
-    { name: "business", link: "#" },
-    { name: "science", link: "#" },
-    { name: "health", link: "#" },
-    { name: "sports", link: "#" },
-    { name: "arts", link: "#" },
-    { name: "food", link: "#" },
-    { name: "travel", link: "#" },
-  ];
-
-  const categoriesRendered = categoriesData.map((category) => (
-    <li key={category.name}>
-      <Link to={category.link} className="hover:underline">
-        {category.name}
-      </Link>
-    </li>
-  ));
+  const handleClose = () => {
+    handleMobileNav("close");
+  };
 
   return (
     <div
-      className={`absolute ${
+      className={`fixed ${
         isMobileNavOpen ? "block" : "hidden"
-      } z-10 bg-white top-0 w-full min-h-screen p-4 laptop:hidden transition-transform delay-100 ease-linear`}
+      } z-10 bg-white top-0 w-full min-h-screen p-4 laptop:hidden`}
     >
       <div className="container mx-auto px-2 font-noto-sans-georgian">
         <header>
           <div className="flex items-center justify-between">
-            <h1 onClick={handleHome} className="font-tinos font-[700] text-2xl">
+            <h1
+              onClick={handleHome}
+              className="font-tinos cursor-pointer font-[700] text-2xl"
+            >
               The <span className="whitespace-nowrap">Morning Post</span>
             </h1>
             <div className="flex items-center gap-2">
@@ -67,7 +74,7 @@ const MobileNav = ({ isMobileNavOpen, handleMobileNav }: Props) => {
                 <span>Live</span>
               </Link>
               <button
-                onClick={handleHome}
+                onClick={handleClose}
                 className="hover:bg-gray-100 p-1.5 rounded-full"
               >
                 <Close />
@@ -93,7 +100,7 @@ const MobileNav = ({ isMobileNavOpen, handleMobileNav }: Props) => {
         <main>
           <nav className="categories mt-12">
             <h2 className="mb-3 font-[700]">Categories</h2>
-            <ul className="grid grid-cols-2 text-gray-800">
+            <ul className="grid grid-cols-2 text-gray-800 capitalize">
               {categoriesRendered}
             </ul>
           </nav>
