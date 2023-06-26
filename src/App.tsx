@@ -2,9 +2,12 @@ import { lazy, Suspense, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Error from "./pages/Error";
 import Footer from "./components/Footer";
-import NewsProvider from "./context/NewsContext";
-import MobileNav from "./components/Mobilenav";
+import NewsProvider from "./context/TrendingNewsContext";
+import MobileNav from "./components/MobileNav";
+import LanguageProvider from "./context/LanguageContext";
+import CountryProvider from "./context/CountryContext";
 const Search = lazy(() => import("./pages/Search"));
 
 const App = () => {
@@ -37,17 +40,22 @@ const App = () => {
         isMobileNavOpen={isMobileNavOpen}
         handleMobileNav={handleMobileNav}
       />
-      <div className="container mx-auto px-2">
-        <Suspense fallback={<span>Loading</span>}>
-          <NewsProvider>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/search" element={<Search />} />
-            </Routes>
-          </NewsProvider>
-        </Suspense>
-      </div>
-      <Footer />
+      <LanguageProvider>
+        <NewsProvider>
+          <CountryProvider>
+            <div className="container mx-auto px-2">
+              <Suspense fallback={<span>Loading</span>}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="*" element={<Error />} />
+                </Routes>
+              </Suspense>
+            </div>
+          </CountryProvider>
+        </NewsProvider>
+        <Footer />
+      </LanguageProvider>
     </div>
   );
 };
