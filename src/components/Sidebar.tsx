@@ -2,7 +2,7 @@ import Search from "./Search";
 import Trending from "./Trending";
 import Weather from "./Weather";
 
-const sidebar = () => {
+const Sidebar = () => {
   return (
     <section className="sidebar w-full laptop:w-[40%] laptop:sticky laptop:top-[6.5rem] laptop:float-right">
       <div className="trending-news mb-4">
@@ -18,4 +18,4 @@ const sidebar = () => {
   );
 };
 
-export default sidebar;
+export default Sidebar;

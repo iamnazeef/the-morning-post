@@ -1,62 +1,108 @@
-import { useState, useEffect } from "react";
-import useFetch from "../hooks/useFetch";
+import { useState, useEffect, useContext } from "react";
 import { api } from "../utils/api";
 import { WeatherData } from "../ts/types";
 import useGeolocation from "../hooks/useGeolocation";
+import axios from "axios";
+import Loading from "../assets/spinner/Loading";
+import { CountryContext } from "../context/CountryContext";
 
 const Weather = () => {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [weatherError, setWeatherError] = useState<string | null>(null);
-  const [weatherDataLoading, setWeatherDataLoading] = useState<boolean>(true);
-
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [URL, setURL] = useState("");
   const { longitude, latitude } = useGeolocation();
-  const { data, error, isLoading } = useFetch(api.weather(longitude, latitude));
+  const CountryContextValue = useContext(CountryContext);
+
+  if (CountryContextValue === null) {
+    return null;
+  }
+
+  const { setCountry } = CountryContextValue;
 
   useEffect(() => {
+    if (latitude !== null && longitude !== null) {
+      setURL(api.weather(longitude, latitude));
+    }
+  }, [latitude, longitude]);
+
+  useEffect(() => {
+    const controller = new AbortController();
     let isMounted = true;
+    setError("");
 
     if (isMounted) {
-      setWeatherData(data);
-      setWeatherError(error);
-      setWeatherDataLoading(isLoading);
+      setIsLoading(true);
+
+      if (longitude && latitude) {
+        setURL(api.weather(longitude, latitude));
+      } else {
+        setURL(api.weather());
+      }
+
+      axios
+        .get(URL, {
+          signal: controller.signal,
+        })
+        .then((response) => {
+          if (isMounted) {
+            setWeather(response.data);
+            setCountry(response.data.sys.country.toLowerCase());
+          }
+        })
+        .catch((error) => {
+          if (isMounted) {
+            setError(error.message);
+          }
+        })
+        .finally(() => {
+          if (isMounted) {
+            setIsLoading(false);
+          }
+        });
     }
 
     return () => {
+      controller.abort();
       isMounted = false;
     };
-  }, [data, error, isLoading]);
+  }, [URL]);
 
-  if (!weatherData?.weather) {
+  if (!weather?.weather) {
     return;
   }
 
   return (
     <section className="weather bg-white w-full tablet:max-w-[400px] laptop:mx-auto flex items-center justify-around font-noto-sans-georgian border border-gray-600 rounded-md p-2 shadow-sm">
       <div className="icon flex flex-col items-center">
-        {weatherData?.main && (
+        {weather?.main && (
           <img
-            src={`https://openweathermap.org/img/wn/${weatherData?.weather[0]?.icon}@2x.png`}
-            alt={weatherData?.weather[0].main}
-            width={60}
-            height={60}
-            title={weatherData?.weather[0].main}
+            src={`https://openweathermap.org/img/wn/${weather?.weather[0]?.icon}@2x.png`}
+            alt={weather?.weather[0].main}
+            width={40}
+            height={40}
+            title={weather?.weather[0].main}
           />
         )}
         <span className="text-xs font-noto-sans-georgian capitalize text-gray-600">
-          {weatherData?.weather && weatherData?.weather[0]?.main}
+          {weather?.weather && weather?.weather[0]?.main}
         </span>
       </div>
-      <div className="info text-center flex flex-col max-w-[200px]">
-        <div className="text-2xl">
-          <span className="font-[700]">
-            {weatherData?.main?.temp ? Math.floor(weatherData?.main?.temp) : ""}
+      {!error && !isLoading && (
+        <div className="info text-center flex flex-col max-w-[200px]">
+          <div className="text-2xl">
+            <span className="font-[700]">
+              {weather?.main?.temp ? Math.floor(weather?.main?.temp) : ""}
+            </span>
+            <span>&deg;C</span>
+          </div>
+          <span className="text-sm break-words text-gray-600">
+            {weather?.name ? weather?.name : ""}
           </span>
-          <span>&deg;C</span>
         </div>
-        <span className="text-base break-words text-gray-600">
-          {weatherData?.name ? weatherData?.name : ""}
-        </span>
-      </div>
+      )}
+      {!isLoading && error && error}
+      {!error && isLoading && <Loading />}
     </section>
   );
 };

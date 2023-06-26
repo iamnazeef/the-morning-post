@@ -1,23 +1,28 @@
 import TrendingUp from "../assets/icons/TrendingUp";
 import { useContext } from "react";
-import { NewsContext } from "../context/NewsContext";
+import { TrendingNewsContext } from "../context/TrendingNewsContext";
 import { Link } from "react-router-dom";
 import PlaceHolderImage from "../assets/images/placeholder-image.webp";
+import Loading from "../assets/spinner/Loading";
 
 const Trending = () => {
-  const data = localStorage.getItem("newsData");
-  const news = data && JSON.parse(data);
+  const trendingContextValue = useContext(TrendingNewsContext);
 
-  const articles = news?.slice(0, 5);
+  if (trendingContextValue === null) {
+    return null;
+  }
+
+  const { trendingNews: articles } = trendingContextValue;
 
   return (
-    <div className="trending bg-white laptop:max-w-[400px] max-h-[350px] overflow-auto laptop:mx-auto font-noto-sans-georgian border border-gray-600 rounded-md shadow-sm">
+    <div className="trending bg-white laptop:max-w-[400px] max-h-[350px] overflow-auto laptop:mx-auto font-noto-sans-georgian border border-gray-600 rounded-md shadow-sm mb-4">
       <section className="title font-domine font-[700] text-xl sticky top-0 bg-white p-2 border-b border-black flex items-center gap-2">
         Trending <TrendingUp />
       </section>
       <section className="news px-2">
         <ul>
           {articles &&
+            Array.isArray(articles) &&
             articles.map((article: any, index: number) => (
               <li key={article?.url}>
                 <Link to={article?.url}>
@@ -37,7 +42,7 @@ const Trending = () => {
                     </section>
                     <section className="image w-[40%]">
                       <img
-                        src={article?.image}
+                        src={article?.image ? article?.image : PlaceHolderImage}
                         alt="image"
                         className="w-full max-w-[350px] h-full object-contain"
                         width={200}
@@ -48,6 +53,7 @@ const Trending = () => {
                 </Link>
               </li>
             ))}
+          {Array.isArray(articles) && articles.length < 1 && <Loading />}
         </ul>
       </section>
     </div>
