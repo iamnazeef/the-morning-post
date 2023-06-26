@@ -1,31 +1,45 @@
-import Sidebar from "../components/Sidebar";
-import { Link, useSearchParams } from "react-router-dom";
-import News from "../components/News";
+import { useSearchParams, Navigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { LanguageContext } from "../context/LanguageContext";
+import { Article } from "../ts/types";
+import Page from "../components/Page";
+import useFetch from "../hooks/useFetch";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
+  const [news, setNews] = useState<Article[]>([]);
+  const [newsError, setNewsError] = useState("Something went wrong...");
+  const [isNewsLoading, setIsNewsLoading] = useState(false);
+  const { language } = useContext(LanguageContext) || { language: "en" };
   const query = searchParams.get("q");
-  const data = localStorage.getItem("newsData");
-  const news = data && JSON.parse(data).slice(5);
+
+  if (query === null || query === "") {
+    return <Navigate to="/" replace={true} />;
+  }
+
+  const { data, error, isLoading } = useFetch([query, language]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      setNews(data);
+      setIsNewsLoading(isLoading);
+      setNewsError(error);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [data]);
 
   return (
-    <main className="search min-h-screen">
-      <Sidebar />
-      <section className="news w-full laptop:w-[60%] laptop:pr-2">
-        <h2 className="font-domine mt-4 p-2 font-[700] text-xl laptop:text-2xl">
-          Showing results for "{query}"
-        </h2>
-        <ul>
-          {news.map((article: any) => (
-            <li key={article!.url}>
-              <Link to={article!.url}>
-                <News article={article} />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </main>
+    <Page
+      heading={`Showing results for "${query}"`}
+      news={news}
+      isLoading={isNewsLoading}
+      error={newsError}
+    />
   );
 };
 
